@@ -11,8 +11,7 @@ import { arcjetMiddleware } from './middlewares/arcjet.middleware.js';
 
 const app = express();
 
-//Connects to the Database
-connectDB();
+
 app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
@@ -31,8 +30,21 @@ app.use("/api/notifications",notificationRoute);
 
 
 
+const startServer = async()=>{
+    try {
+        //Connects to the Database
+connectDB();
+if(ENV.NODE_ENV !=="production"){
+    app.listen(ENV.PORT,()=>{
+        console.log("Server is running on port :",ENV.PORT);
+    })
+}
+    } catch (error) {
+        console.log("Failed top start server : ",error);
+        process.exit(1)
+    }
+}
+startServer();
 
 
-app.listen(ENV.PORT,()=>{
-    console.log("Server is running on port :",ENV.PORT);
-})
+export default app;
